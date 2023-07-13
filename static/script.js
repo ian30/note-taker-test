@@ -6,6 +6,25 @@ const noteInput = document.getElementById('note-input');
 const noteList = document.getElementById('note-list');
 let draggingItem = null;
 addNoteForm.addEventListener('submit', addNote);
+// Save notes to a cookie
+function saveNotesToCookie() {
+  const notes = Array.from(noteList.querySelectorAll('.draggable-item')).map((noteItem) => noteItem.innerHTML);
+  document.cookie = `notes=${encodeURIComponent(JSON.stringify(notes))}; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/`;
+}
+// Load notes from a cookie
+function loadNotesFromCookie() {
+  const cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)notes\s*=\s*([^;]*).*$)|^.*$/, '$1');
+  if (cookieValue) {
+    const notes = JSON.parse(decodeURIComponent(cookieValue));
+    notes.forEach((noteText) => {
+      const newNoteItem = createNoteItem(noteText);
+      noteList.appendChild(newNoteItem);
+    });
+  }
+}
+// Add event listener for page load event to load notes from cookie
+window.addEventListener('load', loadNotesFromCookie);
+
 // Handle form submission to add a new note
 function addNote(event) {
   event.preventDefault();
@@ -14,8 +33,10 @@ function addNote(event) {
     const newNoteItem = createNoteItem(noteText);
     noteList.appendChild(newNoteItem);
     noteInput.value = '';
+    saveNotesToCookie(); // Save notes to cookie after adding a new note
   }
 }
+
 // Create a new note item element
 function createNoteItem(noteText) {
   const li = document.createElement('li');
