@@ -41,11 +41,22 @@ function addNote(event) {
 function createNoteItem(noteText) {
   const li = document.createElement('li');
   li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center', 'draggable-item');
-  li.innerHTML = noteText;
+  li.innerHTML = `
+    <span>${noteText}</span>
+    <button class="btn btn-danger delete-button">Delete</button>
+  `;
   li.setAttribute('draggable', true);
   li.addEventListener('dragstart', dragStart);
+
+  const deleteButton = li.querySelector('.delete-button');
+  deleteButton.addEventListener('click', () => {
+    li.remove();
+    saveNotesToCookie(); // Save notes to cookie after deleting a note
+  });
+
   return li;
 }
+
 // Add event listeners for drag and drop events
 noteList.addEventListener('dragstart', dragStart);
 noteList.addEventListener('dragover', dragOver);
