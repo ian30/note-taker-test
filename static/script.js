@@ -38,24 +38,48 @@ function addNote(event) {
 }
 
 // Create a new note item element
+// function createNoteItem(noteText) {
+//   const li = document.createElement('li');
+//   li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center', 'draggable-item');
+//   li.innerHTML = `
+//     <span>${noteText}</span>
+//     <button class="btn btn-danger delete-button">Delete</button>
+//   `;
+//   li.setAttribute('draggable', true);
+//   li.addEventListener('dragstart', dragStart);
+
+//   const deleteButton = li.querySelector('.delete-button');
+//   deleteButton.addEventListener('click', () => {
+//     li.remove();
+//     saveNotesToCookie(); // Save notes to cookie after deleting a note
+//   });
+
+//   return li;
+// }
+
+// Create a new note item element
 function createNoteItem(noteText) {
   const li = document.createElement('li');
   li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center', 'draggable-item');
-  li.innerHTML = `
-    <span>${noteText}</span>
-    <button class="btn btn-danger delete-button">Delete</button>
-  `;
   li.setAttribute('draggable', true);
   li.addEventListener('dragstart', dragStart);
 
-  const deleteButton = li.querySelector('.delete-button');
+  const span = document.createElement('span');
+  span.textContent = noteText;
+  li.appendChild(span);
+
+  const deleteButton = document.createElement('button');
+  deleteButton.classList.add('btn', 'btn-danger', 'delete-button');
+  deleteButton.textContent = 'Delete';
   deleteButton.addEventListener('click', () => {
     li.remove();
     saveNotesToCookie(); // Save notes to cookie after deleting a note
   });
+  li.appendChild(deleteButton);
 
   return li;
 }
+
 
 // Add event listeners for drag and drop events
 noteList.addEventListener('dragstart', dragStart);
